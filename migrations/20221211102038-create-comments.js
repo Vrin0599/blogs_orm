@@ -12,17 +12,17 @@ module.exports = {
         allowNull: false,
         type: Sequelize.STRING,
       },
-      blog_id: {
+      blogId: {
         allowNull: false,
         type: Sequelize.UUID,
       },
       createdBy: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
       },
       updatedBy: {
         allowNull: false,
-        type: Sequelize.INTEGER,
+        type: Sequelize.UUID,
       },
       createdAt: {
         allowNull: false,

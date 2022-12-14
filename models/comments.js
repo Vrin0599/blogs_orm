@@ -9,6 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
+      comments.belongsTo(models.blogs);
     }
   }
   comments.init(
@@ -17,17 +18,21 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false,
         type: DataTypes.STRING,
       },
-      blog_id: {
+      blogId: {
         allowNull: false,
         type: DataTypes.UUID,
+        references: {
+          model: "blogs",
+          key: "id",
+        },
       },
       createdBy: {
         allowNull: false,
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
       },
       updatedBy: {
         allowNull: false,
-        type: DataTypes.INTEGER,
+        type: DataTypes.UUID,
       },
     },
     {
