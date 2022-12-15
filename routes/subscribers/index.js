@@ -19,7 +19,6 @@ router.post("/create", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    console.log("here");
     const getSubscribers = await subscribers.findAll({
       attributes: ["follower_id"],
       where: {

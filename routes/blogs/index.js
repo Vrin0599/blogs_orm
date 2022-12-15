@@ -1,5 +1,5 @@
 const express = require("express");
-// const { Sequelize } = require("sequelize");
+const { Sequelize } = require("sequelize");
 const router = express.Router();
 
 const { blogs, comments } = require("../../models");
@@ -25,17 +25,30 @@ router.post("/create", async (req, res, next) => {
 router.get("/", async (req, res, next) => {
   try {
     const getBlogs = await blogs.findAll({
-      attributes: ["title", "content"],
+      subQuery: false,
+      attributes: [
+        "title",
+        "content",
+        [Sequelize.fn("COUNT", Sequelize.col("comments.id")), "commentsCount"],
+      ],
       include: [
         {
+          required: false,
           model: comments,
-          attributes: ["comments"],
+          attributes: [],
+        },
+        {
+          as: "data",
+          required: false,
+          model: comments,
+          attributes: ["id"],
         },
       ],
+      group: ["blogs.id", "data.id"],
     });
-    console.log(getBlogs);
     res.send(200, getBlogs);
   } catch (err) {
+    console.log(err);
     res.status(500).send(err);
   }
 });

@@ -13,9 +13,9 @@ router.post("/create", async (req, res, next) => {
       createdBy: userId,
       updatedBy: userId,
     });
+
     res.send(200, publishComments);
   } catch (err) {
-    console.log(err);
     res.status(500).send(err);
   }
 });
@@ -25,7 +25,6 @@ router.get("/", async (req, res, next) => {
     const getComments = await comments.findAll();
     res.send(200, getComments);
   } catch (err) {
-    console.log(err);
     res.status(500).send(err);
   }
 });

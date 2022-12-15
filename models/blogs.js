@@ -14,6 +14,13 @@ module.exports = (sequelize, DataTypes) => {
           name: "blogId",
         },
       });
+
+      blogs.hasMany(models.comments, {
+        as: "data",
+        foreignKey: {
+          name: "blogId",
+        },
+      });
     }
   }
   blogs.init(
