@@ -1,14 +1,12 @@
 const express = require("express");
 const router = express.Router();
-const { users } = require("../../models");
+const controllers = require("../../controllers");
 
 router.post("/create", async (req, res, next) => {
   try {
     const { fullname, email } = req.body;
-    if (!fullname || !email) {
-      return reject("Please enter fullname and email then proceed.");
-    }
-    const userDetails = await users.create({
+
+    const userDetails = await controllers.createUser({
       fullname: fullname,
       email: email,
     });

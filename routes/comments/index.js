@@ -1,17 +1,14 @@
 const express = require("express");
 const router = express.Router();
-
-const { comments } = require("../../models");
+const controllers = require("../../controllers");
 
 router.post("/create", async (req, res, next) => {
   try {
     const { message, blogId, userId } = req.body;
-    console.log(message, blogId, userId);
-    const publishComments = await comments.create({
-      comments: message,
+    const publishComments = await controllers.createComments({
+      message: message,
       blogId: blogId,
-      createdBy: userId,
-      updatedBy: userId,
+      userId: userId,
     });
 
     res.send(200, publishComments);
@@ -22,7 +19,7 @@ router.post("/create", async (req, res, next) => {
 
 router.get("/", async (req, res, next) => {
   try {
-    const getComments = await comments.findAll();
+    const getComments = await controllers.getComments();
     res.send(200, getComments);
   } catch (err) {
     res.status(500).send(err);

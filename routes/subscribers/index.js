@@ -1,14 +1,14 @@
 const express = require("express");
 const router = express.Router();
 
-const { subscribers, users } = require("../../models");
+const controllers = require("../../controllers");
 
 router.post("/create", async (req, res, next) => {
   try {
-    const { author_id, follower_id, status } = req.body;
-    const createSubscribers = await subscribers.create({
-      author_id: author_id,
-      follower_id: follower_id,
+    const { authorId, followerId, status } = req.body;
+    const createSubscribers = await controllers.createSubscribers({
+      author_id: authorId,
+      follower_id: followerId,
       status: status,
     });
     res.send(200, createSubscribers);
@@ -19,17 +19,8 @@ router.post("/create", async (req, res, next) => {
 
 router.post("/", async (req, res, next) => {
   try {
-    const getSubscribers = await subscribers.findAll({
-      attributes: ["follower_id"],
-      where: {
-        author_id: req.body.authorId,
-      },
-      include: [
-        {
-          attributes: ["fullname"],
-          model: users,
-        },
-      ],
+    const getSubscribers = await controllers.getSubscribers({
+      authorId: req.body.authorId,
     });
     res.send(200, getSubscribers);
   } catch (err) {
