@@ -11,8 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       subscribers.belongsTo(models.users, { foreignKey: "author_id" });
       subscribers.belongsTo(models.blogs, {
-        // through: "users",
-        foreignKey: "author_id",
+        foreignKey: "blog_id",
       });
     }
   }
@@ -34,6 +33,11 @@ module.exports = (sequelize, DataTypes) => {
           model: "users",
           key: "id",
         },
+      },
+      blog_id: {
+        type: DataTypes.UUID,
+        model: "blogs",
+        key: "id",
       },
     },
     {

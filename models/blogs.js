@@ -15,6 +15,12 @@ module.exports = (sequelize, DataTypes) => {
         },
       });
 
+      blogs.hasOne(models.subscribers, {
+        foreignKey: {
+          name: "blog_id",
+        },
+      });
+
       blogs.hasMany(models.comments, {
         as: "data",
         foreignKey: {

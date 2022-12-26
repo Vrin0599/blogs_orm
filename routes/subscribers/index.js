@@ -17,7 +17,7 @@ router.post("/create", async (req, res, next) => {
   }
 });
 
-router.post("/", async (req, res, next) => {
+router.get("/", async (req, res, next) => {
   try {
     const getSubscribers = await controllers.getSubscribers({
       authorId: req.body.authorId,

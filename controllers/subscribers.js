@@ -1,13 +1,14 @@
 const { Sequelize } = require("sequelize");
 const { subscribers, users, blogs } = require("../models");
 
-const createSubscribers = ({ author_id, follower_id, status }) => {
+const createSubscribers = ({ author_id, follower_id, status, blog_id }) => {
   return new Promise(async (resolve, reject) => {
     try {
       const createSubscribers = await subscribers.create({
         author_id: author_id,
         follower_id: follower_id,
         status: status,
+        blog_id: blog_id,
       });
       resolve(createSubscribers);
     } catch (err) {
@@ -17,64 +18,24 @@ const createSubscribers = ({ author_id, follower_id, status }) => {
   });
 };
 
-// const getSubscribers = ({ authorId }) => {
-//   return new Promise(async (resolve, reject) => {
-//     try {
-//       const getSubscribers = await subscribers.findAll({
-//         attributes: ["follower_id"],
-//         where: {
-//           author_id: authorId,
-//         },
-//         include: [
-//           {
-//             attributes: ["fullname"],
-//             model: users,
-//           },
-//         ],
-//       });
-//       resolve(getSubscribers);
-//     } catch (err) {
-//       console.log(err);
-//       reject(err);
-//     }
-//   });
-// };
-
 const getSubscribers = () => {
   return new Promise(async (resolve, reject) => {
     try {
-      // const getSubscribers = await subscribers.findAll({
-      //   subQuery: false,
-      //   attributes: [
-      //     "author_id",
-      //     "follower_id",
-      //     [
-      //       Sequelize.fn("COUNT", Sequelize.col("subscribers.id")),
-      //       "subscribersCount",
-      //     ],
-      //   ],
-      //   include: [
-      //     {
-      //       required: false,
-      //       model: subscribers,
-      //       attributes: [],
-      //     },
-      //     {
-      //       as: "data",
-      //       required: false,
-      //       model: subscribers,
-      //       attributes: ["id"],
-      //     },
-      //   ],
-      //   group: ["blogs.id", "data.id"],
-      // });
-
       const getUsers = await users.findAll({
         attributes: [
           "fullname",
           "email",
+          // [
+          //   Sequelize.fn("COUNT", Sequelize.col("subscribers.author_id")),
+          //   "subscribersCount",
+          // ],
           [
-            Sequelize.fn("COUNT", Sequelize.col("subscribers.id")),
+            Sequelize.literal(`(
+                SELECT COUNT(*)
+                FROM subscribers
+                WHERE
+                    subscribers.author_id = users.id
+            )`),
             "subscribersCount",
           ],
         ],
@@ -82,17 +43,17 @@ const getSubscribers = () => {
           {
             required: false,
             model: subscribers,
-            attributes: [],
+            attributes: ["id"],
             include: [
               {
                 required: false,
                 model: blogs,
-                attributes: ["id"],
+                attributes: ["title"],
               },
             ],
           },
         ],
-        group: ["subscribers.id", "users.id", "blogs.id"],
+        // group: ["subscribers.author_id", "users.id", "blogs.id"],
       });
 
       resolve(getUsers);
