@@ -1,6 +1,27 @@
 const { Sequelize } = require("sequelize");
 const { blogs, comments } = require("../models");
 
+const createBlog = ({ title, content, userId }) => {
+  return new Promise(async (resolve, reject) => {
+    try {
+      if (!title || !content) {
+        return reject("Please enter the title & content of the blog");
+      }
+
+      const response = await blogs.create({
+        title: title,
+        content: content,
+        createdBy: userId,
+        updatedBy: userId,
+      });
+      resolve(response);
+    } catch (err) {
+      console.log(err);
+      reject(err);
+    }
+  });
+};
+
 const getBlogs = () => {
   return new Promise(async (resolve, reject) => {
     try {
@@ -30,27 +51,6 @@ const getBlogs = () => {
         group: ["blogs.id", "data.id"],
       });
       resolve(blogData);
-    } catch (err) {
-      console.log(err);
-      reject(err);
-    }
-  });
-};
-
-const createBlog = ({ title, content, userId }) => {
-  return new Promise(async (resolve, reject) => {
-    try {
-      if (!title || !content) {
-        return reject("Please enter the title & content of the blog");
-      }
-
-      const response = await blogs.create({
-        title: title,
-        content: content,
-        createdBy: userId,
-        updatedBy: userId,
-      });
-      resolve(response);
     } catch (err) {
       console.log(err);
       reject(err);

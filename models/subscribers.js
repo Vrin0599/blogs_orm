@@ -10,6 +10,10 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       // define association here
       subscribers.belongsTo(models.users, { foreignKey: "author_id" });
+      subscribers.belongsTo(models.blogs, {
+        // through: "users",
+        foreignKey: "author_id",
+      });
     }
   }
   subscribers.init(
